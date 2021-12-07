@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.example.happyhouse.model.mapper.NoticeMapper">
+
+	<!-- CRUD -->
+	<insert id="insertNotice" parameterType="NoticeDto">
+		insert into notice (iduser, title, category, content, regitime)
+		values (#{iduser}, #{title}, #{category}, #{content}, now())
+		<!-- <selectKey resultType="int" keyProperty="idx" order="AFTER">
+			select last_insert_id()
+		</selectKey> -->
+	</insert>
+	
+	<!-- <select id="listNotice" parameterType="map" resultType="NoticeDto">
+		select *
+		from notice
+		<if test="word != null and word != ''">
+			where title like ('%', #{word}, '%')
+			or content like ('%', #{word}, '%')
+		</if>
+		order by idx desc
+		limit #{start}, #{spp}
+	</select> -->
+	
+	<select id="listNotice" resultType="NoticeDto">
+		select idx, iduser, title, category, content, regitime
+		from notice
+		order by idx desc
+	</select>
+	
+	<select id="getNotice" parameterType="int" resultType="NoticeDto">
+		select *
+		from notice
+		where idx = #{noticeNo}
+	</select>
+	
+	<update id="updateNotice" parameterType="NoticeDto">
+		update notice
+		set title = #{title}, category = #{category}, content = #{content}
+		where idx = #{idx}
+	</update>
+	
+	<delete id="deleteNotice" parameterType="int">
+		delete from notice
+		where idx = #{noticeNo}
+	</delete>
+	
+	<!-- 파일 -->
+	<insert id="insertFile" parameterType="NoticeDto">
+		insert into file_info (idx, saveFolder, originFile, saveFile)
+		values
+		<foreach collection="fileInfos" item="fileinfo" separator=", ">
+			(#{idx}, #{fileinfo.saveFolder}, #{fileinfo.originFile}, #{fileinfo.saveFile)
+		</foreach>
+	</insert>
+
+	<delete id="deleteFile" parameterType="int">
+		delete from file_info
+		where idx = #{noticeNo}
+	</delete>
+	
+	<!-- 페이징 처리 -->
+	<select id="getTotalCount" parameterType="map" resultType="int">
+		select count(idx)
+		from notice
+		<if test="word != null and word != ''">
+			where title like concat('%', #{word}, '%')
+			or content like concat('%', #{word}, '%')
+		</if>
+	</select>
+</mapper>

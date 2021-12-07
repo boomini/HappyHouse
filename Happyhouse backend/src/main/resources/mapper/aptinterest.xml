@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.example.happyhouse.model.mapper.InterestAptMapper">
+
+	<!-- CRUD -->
+	<insert id="insertInterest" parameterType="aptinterestdto">
+		insert into interestapt (home_code, iduser, lat, lng, buscnt, subcnt, biccnt, cafecnt, concnt, kidcnt, hoscnt, schcnt,home_name)
+		values (#{home_code},#{iduser},#{lat},#{lng},#{buscnt},#{subcnt},#{biccnt},#{cafecnt},#{concnt},#{kidcnt},#{hoscnt},#{schcnt},#{home_name})
+	</insert>
+	
+	<select id="getInterestApt" parameterType="InterestValDto" resultType="aptinterestdto">
+		SELECT ih.home_name,ih.buscnt,ih.subcnt,ih.biccnt, ih.cafecnt,ih.concnt,ih.kidcnt,ih.hoscnt,ih.schcnt,ih.build_year,ih.area,
+			round((ih.build_year-aggregates.AVGBUILD)/aggregates.STDBUILD*#{buildyearval}+50,1) AS buildScore,
+		    round((ih.area-aggregates.AVGAREA)/aggregates.STDAREA*#{areaval}+50,1) AS areaScore,
+		    round((ih.buscnt-aggregates.AVGBUS)/aggregates.STDBUS*#{transval}+50,1) AS busScore,
+		    round((ih.subcnt-aggregates.AVGSUB)/aggregates.STDSUB*#{transval}+50,1) AS subScore,
+		    round((ih.biccnt-aggregates.AVGBIC)/aggregates.STDBIC*#{transval}+50,1) AS bicScore,
+		    round((ih.cafecnt-aggregates.AVGCAF)/aggregates.STDCAF*#{convenienteval}+50,1) AS cafeScore,
+		    round((ih.concnt-aggregates.AVGCON)/aggregates.STDCON*#{convenienteval}+50,1) AS concScore,
+		    round((ih.kidcnt-aggregates.AVGKID)/aggregates.STDKID*#{convenienteval}+50,1) AS kidScore,
+		    round((ih.hoscnt-aggregates.AVGHOS)/aggregates.STDHOS*#{convenienteval}+50,1) AS hosScore,
+		    round((ih.schcnt-aggregates.AVGSCH)/aggregates.STDSCH*#{convenienteval}+50,1) AS schScore
+			FROM
+				(select distinct ia.*,hd.build_year,hd.area
+					from interestapt ia
+					left join homedeal hd
+					on hd.home_code=ia.home_code
+					where iduser=#{iduser}) ih
+				    CROSS JOIN(
+						select 
+								AVG(buscnt) AS AVGBUS,
+								STD(buscnt) AS STDBUS,
+							    AVG(subcnt) AS AVGSUB,
+								STD(subcnt) AS STDSUB,
+							    AVG(biccnt) AS AVGBIC,
+								STD(biccnt) AS STDBIC,
+							    AVG(cafecnt) AS AVGCAF,
+								STD(cafecnt) AS STDCAF,
+							    AVG(concnt) AS AVGCON,
+								STD(concnt) AS STDCON,
+							    AVG(kidcnt) AS AVGKID,
+								STD(kidcnt) AS STDKID,
+							    AVG(hoscnt) AS AVGHOS,
+								STD(hoscnt) AS STDHOS,
+							    AVG(schcnt) AS AVGSCH,
+								STD(schcnt) AS STDSCH,
+							    AVG(build_year) AS AVGBUILD,
+								STD(build_year) AS STDBUILD,
+							    AVG(area) AS AVGAREA,
+								STD(area) AS STDAREA
+							    FROM (select distinct ia.*,hd.build_year,hd.area
+										from interestapt ia
+										left join homedeal hd
+										on hd.home_code=ia.home_code
+										where iduser=#{iduser}) s
+							    ) AS aggregates;
+	</select>
+
+</mapper>

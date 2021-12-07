@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.example.happyhouse.model.mapper.MemberMapper">
+
+	<select id="idCheck" parameterType="string" resultType="int">
+		select count(iduser)
+		from user
+		where iduser = #{iduser}
+	</select>
+
+	<insert id="registerMember" parameterType="MemberDto">
+		insert into user (iduser, password, name, addr)
+		values (#{iduser}, #{password}, #{name}, #{addr})
+	</insert>
+	
+	<insert id="registerInterest" parameterType="map">
+		insert into userinterest (dongcode, iduser)
+		values (#{dong},#{userinfo})
+	</insert>
+
+	<select id="login" parameterType="MemberDto" resultType="MemberDto">
+		select iduser, password, name, addr
+		from user
+		where iduser = #{iduser} and password = #{password}
+	</select>
+	<resultMap type="MemberDto" id="member">
+		<result column="iduser" property="iduser"/>
+		<result column="password" property="password"/>
+		<result column="name" property="name"/>
+		<result column="addr" property="addr"/>
+		<collection property="dongcode" column="iduser=iduser" javaType="list" ofType="String" select="getinterestcode"/>
+		<collection property="dongname" column="iduser=iduser" javaType="list" ofType="String" select="getinterestname"/>
+	</resultMap>
+	<select id="getMember" parameterType="String" resultMap="member">
+		select iduser, password, name, addr
+		from user
+		where iduser = #{iduser}
+	</select>
+	
+	<select id="getinterestname" resultType="String">
+		select dongName
+			from dongcode
+			where dongcode in ( select dongCode
+								from userinterest
+								where iduser = #{iduser} );
+	</select>
+	
+	<select id="getinterestcode" resultType="String">
+		select dongCode
+		from userinterest
+		where iduser = #{iduser} 
+	</select>
+	<update id="updateMember" parameterType="MemberDto">
+		 update user
+		 set password = #{password} , name = #{name} , addr = #{addr} 
+		 where iduser = #{iduser} 
+	</update>
+	<delete id="deleteInterest" parameterType="map">
+		delete from userinterest
+		where iduser=#{userinfo} and dongcode=#{dong};
+	</delete>
+	<delete id="clearInterest" parameterType="String">
+		delete from userinterest
+		where iduser = #{iduser}
+	</delete>
+	
+	<delete id="deleteMember" parameterType="String">
+		delete from user
+		where iduser=#{userinfo};
+	</delete>
+</mapper>

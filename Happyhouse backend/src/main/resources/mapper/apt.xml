@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.happyhouse.model.mapper.HouseMapMapper">
+ 
+	<select id="getSido" resultType="sidoGugunCodeDto">
+		select left(sidoCode,2) sidoCode, sidoName
+		from sidocode
+		order by sidoCode
+	</select>
+	
+	<select id="getGugunInSido" parameterType="string" resultType="sidoGugunCodeDto">
+		select left(gugunCode,5) gugunCode, gugunName
+		from guguncode
+		where left(gugunCode,2) = #{sido}
+		order by gugunCode
+	</select>
+	
+	<select id="getDongInGugun" parameterType="string" resultType="houseInfoDto">
+		select distinct dongName, dongCode
+		from houseinfo
+		where left(dongCode, 5) = #{gugun}
+		order by dongName
+	</select>
+	
+	<select id="getAptInDong" parameterType="string" resultType="houseInfoDto">
+		select h.aptCode, h.aptName, h.buildyear, h.dongCode, h.dongName, h.jibun, h.lat, h.lng, si.sidoname, gu.gugunname,
+				(select dealAmount from housedeal where aptCode = h.aptCode and no = (select max(no) from housedeal where aptCode = h.aptCode)) recentPrice
+		from houseinfo h
+		left join sidocode si
+		on left(h.dongcode,2) = left(si.sidocode,2)
+		left join guguncode gu
+		on left(h.dongcode,5) = left(gu.guguncode,5)
+		where dongCode = #{dong} 
+		order by aptName
+	</select>
+
+	<select id="getHouseDeal" parameterType="string" resultType="houseDealDto">
+		select  aptcode aptCode, no dealno, dealAmount, dealYear, dealMonth, dealDay, area, floor
+		from housedeal
+		where aptcode = #{apt}
+		order by dealYear, dealMonth, dealDay;
+	</select>
+	
+	<select id="getHomeInDong" parameterType="string" resultType="homeInfoDto">
+		select homeinfo.home_code homeCode, homeinfo.dong dongCode, homeinfo.home_name homeName, homeinfo.jibun, homeinfo.type, dongCode.dongName
+		from homeinfo 
+		join dongCode
+		on dongCode.dongCode = homeinfo.dong
+		where dongCode = #{dong};
+	</select>
+	
+	<select id="getHouseDealInHome" parameterType="homeInfoDto" resultType="homeDealDto">
+		select h.idx dealno,  h.home_name homeName,h.build_year buildYear, h.deal_amount dealAmount, h.deal_year dealYear, h.deal_month dealMonth, h.area, h.floor, h.deal_day dealDay
+		from homedeal h
+		left join dongcode d
+		on d.dongName = h.dong
+		and substr(d.dongCode,1,5) = h.gugun_code
+	    where dongcode=#{dongCode}
+	    and home_name=#{homeName}
+	    and jibun=#{jibun}
+	</select>
+	
+	<select id="getHouseRentInHome" parameterType="homeInfoDto" resultType="homeRentDto">
+		select h.idx dealno,  h.home_name homeName,h.build_year buildYear, h.deposit,  h.deal_year dealYear, h.deal_month dealMonth, h.deal_day dealDay, h.area, h.floor, h.rent_money rentMoney
+		from homerent h
+		left join dongcode d
+		on d.dongName = h.dong
+		and substr(d.dongCode,1,5) = h.gugun_code
+	    where dongcode=#{dongCode}
+	    and home_name=#{homeName}
+	    and jibun=#{jibun}
+	</select>
+	
+	<select id="getAptDealInHome" parameterType="homeInfoDto" resultType="homeDealDto">
+		select h.idx dealno,  h.apt_name homeName,h.build_year buildYear, h.deal_amount dealAmount, h.deal_year dealYear, h.deal_month dealMonth, h.area, h.floor, h.deal_day dealDay
+		from aptdeal h
+		left join dongcode d
+		on d.dongName = h.dong
+		and substr(d.dongCode,1,5) = h.gugun_code
+	    where dongcode=#{dongCode}
+	    and apt_name=#{homeName}
+	    and jibun=#{jibun}
+	</select>
+	
+	<select id="getAptRentInHome" parameterType="homeInfoDto" resultType="homeRentDto">
+		select h.idx dealno,  h.apt_name homeName,h.build_year buildYear, h.deposit,  h.deal_year dealYear, h.deal_month dealMonth, h.deal_day dealDay, h.area, h.floor, h.rent_money rentMoney
+		from aptrent h
+		left join dongcode d
+		on d.dongName = h.dong
+		and substr(d.dongCode,1,5) = h.gugun_code
+		where dongcode=#{dongCode}
+	    and apt_name=#{homeName}
+	    and jibun=#{jibun}
+	</select>
+	
+	<select id="getOfficeDealInHome" parameterType="homeInfoDto" resultType="homeDealDto">
+		select h.idx dealno, h.office_name homeName, h.build_year buildYear, h.deal_amount dealAmount, h.deal_year dealYear, h.deal_month dealMonth, h.area, h.floor, h.deal_day dealDay
+		from officedeal h 
+		left join dongcode d
+		on d.dongName = h.dong
+		and substr(d.dongCode,1,5) = h.gugun_code
+	    where dongcode=#{dongCode}
+	    and office_name=#{homeName}
+	    and jibun=#{jibun}
+	</select>
+	
+	<select id="getOfficeRentInHome" parameterType="homeInfoDto" resultType="homeRentDto">
+		select h.idx dealno, h.office_name homeName, h.build_year buildYear, h.deposit,  h.deal_year dealYear, h.deal_month dealMonth, h.deal_day dealDay, h.area, h.floor, h.rent_money rentMoney
+		from officerent h
+		left join dongcode d
+		on d.dongName = h.dong
+		and substr(d.dongCode,1,5) = h.gugun_code
+		where dongcode=#{dongCode}
+	    and office_name=#{homeName}
+	    and jibun=#{jibun}
+	</select>
+	<select id="getSubway" parameterType="Map" resultType="subwayDto">
+      select * from (
+      select train, station, jibun, roadname, lat, lng,
+      ( 6371 * acos( cos( radians( #{lat} ) )
+       * cos( radians( lat) ) * cos( radians( lng ) - radians(#{lng}) )
+       + sin( radians(#{lat}) )
+       * sin( radians(lat) ) ) ) AS distance
+      from subwayinfo
+      ) DATA
+      <![CDATA[where DATA.distance < 1]]>   
+   </select>
+	
+	<select id="getBus" parameterType="Map" resultType="busDto">
+      select * from (
+      select id, ARS as ARS_ID, station, lat, lng,
+      ( 6371 * acos( cos( radians( #{lat} ) )
+       * cos( radians( lat) ) * cos( radians( lng ) - radians(#{lng}) )
+       + sin( radians(#{lat}) )
+       * sin( radians(lat) ) ) ) AS distance
+      from businfo
+      ) DATA
+      <![CDATA[where DATA.distance < 1]]>   
+   </select>
+   
+   <select id="getBicycle" parameterType="Map" resultType="bicycleDto">
+      select * from (
+      select id,place, gugunname, placedetail,lat, lng, maxcount, btype,
+      ( 6371 * acos( cos( radians( #{lat} ) )
+       * cos( radians( lat) ) * cos( radians( lng ) - radians(#{lng}) )
+       + sin( radians(#{lat}) )
+       * sin( radians(lat) ) ) ) AS distance
+      from bicycleinfo
+      ) DATA
+      <![CDATA[where DATA.distance < 1]]>   
+   </select>
+   
+   <select id="getsubcnt" parameterType="Map" resultType="String">
+      select count(*) from (
+      select train, station, jibun, roadname, lat, lng,
+      ( 6371 * acos( cos( radians( #{lat} ) )
+       * cos( radians( lat) ) * cos( radians( lng ) - radians(#{lng}) )
+       + sin( radians(#{lat}) )
+       * sin( radians(lat) ) ) ) AS distance
+      from subwayinfo
+      ) DATA
+      <![CDATA[where DATA.distance < 1]]>   
+   </select>
+   
+   <select id="getbuscnt" parameterType="Map" resultType="String">
+      select count(*) from (
+      select id, ARS as ARS_ID, station, lat, lng,
+      ( 6371 * acos( cos( radians( #{lat} ) )
+       * cos( radians( lat) ) * cos( radians( lng ) - radians(#{lng}) )
+       + sin( radians(#{lat}) )
+       * sin( radians(lat) ) ) ) AS distance
+      from businfo
+      ) DATA
+      <![CDATA[where DATA.distance < 1]]>   
+   </select>
+   
+   <select id="getbiccnt" parameterType="Map" resultType="String">
+      select count(*) from (
+      select id,place, gugunname, placedetail,lat, lng, maxcount, btype,
+      ( 6371 * acos( cos( radians( #{lat} ) )
+       * cos( radians( lat) ) * cos( radians( lng ) - radians(#{lng}) )
+       + sin( radians(#{lat}) )
+       * sin( radians(lat) ) ) ) AS distance
+      from bicycleinfo
+      ) DATA
+      <![CDATA[where DATA.distance < 1]]>   
+   </select>
+</mapper>

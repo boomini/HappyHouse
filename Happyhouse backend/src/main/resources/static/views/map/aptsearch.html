@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content />
+    <meta name="author" content />
+    <title>Happy House - Member Information</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    <!-- Bootstrap icons-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Monoton&display=swap" rel="stylesheet" />
+ 	<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<link href="css/styles.css" rel="stylesheet" />
+    <link href="css/map.css" rel="stylesheet" />
+  <body class="d-flex flex-column">
+    <main class="flex-shrink-0">
+      <!-- Navigation-->
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container px-5">
+          <a class="navbar-brand" href="index.html">Happy House</a>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+              <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+              <li class="nav-item"><a class="nav-link" href="member_info.html">마이페이지</a></li>
+              <li class="nav-item"><a class="nav-link" href="sign_up.html">회원 가입</a></li>
+              <li class="nav-item"><a class="nav-link" href="sign_in.html">로그인</a></li>
+              <li class="nav-item"><a class="nav-link" href="">로그아웃</a></li>
+              <li class="nav-item dropdown">
+                <a
+                  class="nav-link dropdown-toggle"
+                  id="navbarDropdownBlog"
+                  href="#"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                  >Blog</a
+                >
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownBlog">
+                  <li><a class="dropdown-item" href="blog-home.html">Blog Home</a></li>
+                  <li><a class="dropdown-item" href="blog-post.html">Blog Post</a></li>
+                </ul>
+              </li>
+              <li class="nav-item dropdown">
+                <a
+                  class="nav-link dropdown-toggle"
+                  id="navbarDropdownPortfolio"
+                  href="#"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                  >Portfolio</a
+                >
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownPortfolio">
+                  <li><a class="dropdown-item" href="portfolio-overview.html">Portfolio Overview</a></li>
+                  <li><a class="dropdown-item" href="portfolio-item.html">Portfolio Item</a></li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+      <!-- Page content-->
+      <section>
+        <div class="mapinfo">
+		<!-- Heading Row-->
+		<!--  <div class="row gx-4 gx-lg-5 align-items-center my-5">-->
+			<div class="text-center" id="forinterest">
+			
+			</div>
+			<!-- kakao map start -->
+			<!-- <div id="map" class="col-lg-7 kakao-map" style="width:500px;height:600px;"></div> -->
+			<div class="map_wrap col-lg-9 kakao-map">
+				<div id="map" class="border rounded"
+					style="width: 100%; height: 100%; position: relative; overflow: hidden;"></div>
+			
+				<!-- 위치 검색 -->
+				<div id="menu_wrap">
+				
+					<div class="option" class="bg_white">
+						<div>
+							<div class="dropdown">
+	                    <div class="btn-group">
+	                      <button
+	                        type="button"
+	                        id="sidoBtn"
+	                        class="btn btn-about  dropdown-toggle dropdown-toggle-split"
+	                        data-toggle="dropdown"
+	                      >
+	                        지역선택
+	                      </button>
+	                      <div id="sido_div" class="dropdown-menu">
+	                      </div>
+	                    </div>
+	                    <div class="btn-group">
+	                      <button
+	                        type="button"
+	                        id="guBtn"
+	                        class="btn btn-about dropdown-toggle dropdown-toggle-split"
+	                        data-toggle="dropdown"
+	                      >
+	                        구선택
+	                      </button>
+	                      <div id="gu_div" class="dropdown-menu"></div>
+	                    </div>
+	
+	                    <div class="btn-group">
+	                        <button
+	                          type="button"
+	                          id="dongBtn"
+	                          class="btn btn-about dropdown-toggle dropdown-toggle-split"
+	                          data-toggle="dropdown"
+	                        >
+	                          동선택
+	                        </button>
+	                        <div id="dong_div" class="dropdown-menu"></div>
+	                      </div>
+	                  </div>
+							<!-- <button id="keyword-btn-toggle" class="btn btn-info">▲</button> -->
+						</div>
+					</div>
+					<div class="text-center" id="interestBtn">
+						
+					</div>
+					
+					<hr>
+					<ul id="placesList"></ul>
+					<div id="pagination"></div>
+					
+				</div>
+				
+				 <ul id="category">
+			        <li id="BK9" data-order="0"> 
+			            <span class="category_bg bank"></span>
+			            은행
+			        </li>       
+			        <li id="MT1" data-order="1"> 
+			            <span class="category_bg mart"></span>
+			            마트
+			        </li>  
+			        <li id="PM9" data-order="2"> 
+			            <span class="category_bg pharmacy"></span>
+			            약국
+			        </li>  
+			        <li id="OL7" data-order="3"> 
+			            <span class="category_bg oil"></span>
+			            주유소
+			        </li>  
+			        <li id="CE7" data-order="4"> 
+			            <span class="category_bg cafe"></span>
+			            카페
+			        </li>  
+			        <li id="CS2" data-order="5"> 
+			            <span class="category_bg store"></span>
+			            편의점
+			        </li>      
+			    </ul>
+			</div>
+			<!-- kakao map end -->
+			<!-- information area start -->
+			<div id="info-wrapper"
+				class="info-wrapper col-lg-3 bg-secondary rounded mt-3 overflow-scroll"
+				style="height: 900px;">
+				<h2
+					class="font-weight-light text-white mt-3 mb-3 text-center border-bottom p-3">
+					단지 정보</h2>
+					<h6
+					class="font-weight-light text-white mt-3 mb-3 text-center border-bottom p-3">
+					매매정보를 확인하려면 해당 마커를 클릭해주세요</h6>
+				<div id="info0"
+					class="info-element mt-2 text-center border border-white badge-light"
+					style="display: none;">
+					<!-- 아파트 명 -->
+				</div>
+				<div id="info1"
+					class="info-element mt-2 text-center border border-white badge-light"
+					style="display: none;">
+					<!-- 건축 년도 -->
+				</div>
+				<div id="info2"
+					class="info-element mt-2 text-center border border-white badge-light"
+					style="display: none;">
+					<!-- 도로명 -->
+				</div>
+				<div id="info-append"></div>
+			</div>
+			</div>
+      </section>
+    </main>
+    <!-- Footer-->
+    <footer class="bg-dark py-4 mt-auto">
+      <div class="container px-5">
+        <div class="row align-items-center justify-content-between flex-column flex-sm-row">
+          <div class="col-auto"><div class="small m-0 text-white">Copyright &copy; Your Website 2021</div></div>
+          <div class="col-auto">
+            <a class="link-light small" href="#!">Privacy</a>
+            <span class="text-white mx-1">&middot;</span>
+            <a class="link-light small" href="#!">Terms</a>
+            <span class="text-white mx-1">&middot;</span>
+            <a class="link-light small" href="#!">Contact</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+    
+  </body>
+<script type="text/javascript"
+	src="//dapi.kakao.com/v2/maps/sdk.js?appkey=baaa14387e3cfb7c1acd9127375b90e8&libraries=services,clusterer,drawing"></script>
+ <script
+  src="assets/js/map.js"></script>
+ </head>
+<script type="text/javascript">
+       var placelist = [];
+       var histories = {};
+       var interest;
+       $(document).ready(function(){
+   		$.get(root + "/map/sido"
+   				,function(data, status){
+   					$.each(data, function(index, vo){
+   						$("#sido_div").append(
+   								'<label class="dropdown-item sido" value="'+vo.sidoCode+'">' +vo.sidoName + "</label>"		
+   						)
+   					});//each
+   				}//function
+   				,"json"
+   				);//get
+   		getBtninterest();
+		
+   		});//ready
+   		$(document).on("click",".dropdown-item.sido",function(){
+   			var selSido = $(this).text();
+   			var selCode = $(this).attr('value');
+   			console.log(selSido);
+   			$("#sidoBtn").text(selSido);
+   			$("#guBtn").text("구선택");
+            $("#gu_div").empty();
+            console.log(selCode);
+            $.get(root + "/map/gugun"
+					,{sido:selCode}
+					,function(data, status){
+						$.each(data, function(index, vo) {
+							$("#gu_div").append(
+	   								'<label class="dropdown-item gu" value="'+vo.gugunCode+'">' +vo.gugunName + "</label>"		
+	   						)
+						});//each
+					}//function
+					, "json"
+			);//get
+   		})
+            
+
+       //officePosition의 lat, lng를 이용한 marker
+       $(document).on("click", ".dropdown-item.gu", function () {
+         var selgu = $(this).text();
+         var selCode = $(this).attr('value');
+         $("#guBtn").text(selgu);
+         $("#dongBtn").text("동선택");
+      	 $("#dong_div").empty();
+	      	$.get(root + "/map/dong"
+					,{gugun:selCode}
+					,function(data, status){
+						$.each(data, function(index, vo) {
+							$("#dong_div").append(
+	   								'<label class="dropdown-item dong" value="'+vo.dongCode+'">' +vo.dongName + "</label>"		
+	   						)
+						});//each
+					}//function
+					, "json"
+			);//get
+          });
+   		$(document).on("click", ".dropdown-item.dong", function () {
+            var seldong = $(this).text();
+            var selCode =  $(this).attr('value');
+            interest = selCode;
+            $("#dongBtn").text(seldong);
+
+            $.get(root + "/map/apt"
+					,{dong:selCode}
+					,function(data, status){
+						//$.each(data, function(i, vo) {
+				        //      var keyword = seldong + vo.apt_name;
+				        //     console.log(vo)
+				        //      placelist.push(vo);
+				        $("#interestBtn").empty();
+				        $("#interestBtn").append(
+	   								'<button id="interestAreaBtn" type="button" class="btn btn-info ">관심지역등록</button>'		
+	   						)
+				        
+				           displayPlaces(data);   
+						//});//each
+					}//function
+					, "json"
+			);//get
+			
+			placelist=[];
+        });
+   		
+   		//관심등록  		
+   		$(document).on("click", "#interestAreaBtn", function () {
+   			console.log(interest);
+   		$.ajax({
+			url:root+'/member/' + interest+"/"+sessionStorage.getItem('userinfo'),  
+			type:'GET',
+			contentType:'application/json;charset=utf-8',
+			success:function(user) {			
+				getBtninterest();
+			},
+			error:function(xhr,status,msg){
+				alert("이미 등록되어있는 관심지역입니다");
+				console.log("상태값 : " + status + " Http에러메시지 : "+msg);
+			}				
+		});	
+
+        });
+   		
+   		
+   		//관심지역 클릭시 해당 지역 정보보기
+   		$(document).on("click", "#showinterestBtn", function () {
+   			var seldong = $(this).text();
+            var selCode =  $(this).attr('value');
+   			$.get(root + "/map/apt"
+					,{dong:selCode}
+					,function(data, status){
+						console.log(data);
+				           displayPlaces(data);  
+				           $("#sidoBtn").text("지역선택");
+				           $("#guBtn").text("구선택");				           
+				           $("#dongBtn").text("동선택");
+				           $("#interestBtn").empty();
+					}//function
+					, "json"
+			);//get
+
+        });
+        
+   	//관심지역 버튼 새로고침
+   		function getBtninterest() {
+   			$("#forinterest").empty();
+   			$.get(root + "/member/"+ sessionStorage.getItem('userinfo')
+   					,function(data, status){
+		   				$("#forinterest").append(
+									'<h4 class="m-3">관심지역 모아보기</h4>' 		
+							)
+   						if(data.dongcode.length==0){
+   							$("#forinterest").append(
+   									`<div class="card">
+   									<div class="card-body">등록된 관심지역이 없습니다.</div>
+   									</div>`		
+			 						)
+   						}
+   						else{
+   							$.each(data.dongcode, function(index, vo) {
+   	   							
+   	   							$("#forinterest").append(
+   	   			 								'<Button class=" btn btn-info m-2" id = "showinterestBtn" value="'+vo+'">' +data.dongname[index]+ "</label>"		
+   	   			 						)
+   	   						});//each
+   						}
+   						
+   					}//function
+   					, "json"
+   			);//get
+   		}
+         // 이동할 위도 경도 위치를 생성합니다
+        //  var moveLatLon = new kakao.maps.LatLng(office.lat, office.lng);
+        //  var message = `<div style="padding:5px;">${selOffice}</div>`;
+
+         // 지도 중심을 부드럽게 이동시킵니다
+         // 만약 이동할 거리가 지도 화면보다 크면 부드러운 효과 없이 이동합니다
+        //  map.panTo(moveLatLon);
+
+        //  displayMarker(moveLatLon, message);
+
+         
+</script>
+</html>

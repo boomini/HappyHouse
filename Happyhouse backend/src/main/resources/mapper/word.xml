@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.happyhouse.model.mapper.WordMapper">
+
+	<!--  <select id="listWord" resultType="wordDto">
+		select d.dongName text, w.weight weight
+		from wordcloud w
+		join dongcode d
+		on w.dongCode=d.dongCode;
+	</select>-->
+	<select id="listWord" resultType="wordDto">
+		select dong text, count(*)/50 size 
+		from homedeal
+		group by dong, gugun_code
+		order by count(*) desc
+		limit 20;
+	</select>
+	<insert id="updateCount" parameterType="String">
+		insert into wordcloud values (#{dongcode} , 1)
+		on duplicate key update
+		dongcode = dongcode + 4;
+	</insert>
+	<select id="interestlistWord" resultType="wordDto">
+		select count(*) size,dongname text
+		from userinterest ui
+		join dongcode dc
+		where ui.dongcode = dc.dongcode
+		group by dc.dongcode
+		order by count(*) desc
+		LIMIT 6;
+	</select>
+
+</mapper>
+

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.example.happyhouse.model.mapper.QnaMapper">
+	<select id="listQna" resultType="QnaDto">
+		select idx,iduser, title, content, regtime
+		from qna;
+	</select>
+	
+	<select id="getQna" parameterType="int" resultType="QnaDto">
+		select idx,iduser, title, content, regtime
+		from qna
+		where idx = #{idx};
+	</select>
+	
+	<insert id="writeQuestion" parameterType="QnaDto">
+		insert into qna (iduser,title,content,regtime)
+		values ( #{iduser}, #{title},#{content}, now());
+	</insert>
+	
+	<update id="modifyQna" parameterType="QnaDto">
+		update qna
+		set title = #{title}, content = #{content}
+		where idx = #{idx}
+	</update>
+	
+	<delete id="deleteQestion" parameterType="int">
+		delete from qna
+		where idx = #{idx}
+	</delete>
+	
+	<select id="listAnswerQna" parameterType="int" resultType="QnaAnswerDto">
+		select idx,iduser, title, content, regtime, gidx
+		from qnaanswer
+		where gidx = #{idx};
+	</select>
+	
+	<select id="getQnaAnswer" parameterType="int" resultType="QnaAnswerDto">
+		select idx,iduser, title, content, regtime, gidx
+		from qnaanswer
+		where idx = #{idx};
+	</select>
+	
+	<insert id="writeQnaAnswer" parameterType="QnaAnswerDto">
+		insert into qnaanswer (iduser,title,content,gidx,regtime)
+		values ( #{iduser}, #{title},#{content}, #{gidx}, now());
+	</insert>
+	
+	<update id="modifyQnaAnswer" parameterType="QnaAnswerDto">
+		update qnaanswer
+		set title = #{title}, content = #{content}
+		where idx = #{idx}                                                                                                                 
+	</update>
+	
+	<delete id="deleteQnaAnswer" parameterType="int">
+		delete from qnaanswer
+		where idx = #{idx}
+	</delete>
+	
+	<delete id="clearAnswerById" parameterType="String">
+		delete from qnaanswer
+		where iduser = #{iduser}
+	</delete>
+	
+	<delete id="clearAnswerByQId" parameterType="String">
+	delete from qnaanswer
+	where gidx in (
+		select idx
+		from qna
+		where iduser = #{iduser}
+	)
+	</delete>
+	
+	<delete id="clearQuestionById" parameterType="String">
+	delete from qna
+	where iduser = #{iduser}
+	</delete>
+</mapper>

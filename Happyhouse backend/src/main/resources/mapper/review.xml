@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.example.happyhouse.model.mapper.HomeReviewMapper">
+
+	<!-- CRUD -->
+	<insert id="insertReview" parameterType="homeReviewDto">
+		insert into homereview (home_code,  DATE, iduser, rating, body)  
+		values (#{home_code},now(),#{iduser},#{rating},#{body});
+		<!-- <selectKey resultType="int" keyProperty="idx" order="AFTER">
+			select last_insert_id()
+		</selectKey> -->
+	</insert>
+	
+	<select id="listReview" parameterType="String" resultType="homeReviewDto">
+		select *
+		from homereview
+		where home_code = #{home_code}
+	</select>
+
+	<update id="updateReview" parameterType="NoticeDto">
+		update homereview
+		set rating = #{rating}, body = #{body}
+		where id = #{id}
+	</update>
+	
+	<delete id="deleteReview" parameterType="String">
+		delete from homereview
+		where id = #{reviewNo}
+	</delete>
+	
+</mapper>
